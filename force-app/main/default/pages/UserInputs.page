@@ -1,0 +1,9 @@
+<apex:page >
+<h1>Configure the datatable settings</h1>
+
+<apex:pageBlock title="Block">
+    <apex:pageBlockSection title="Section">
+        <p>Section</p>
+    </apex:pageBlockSection>
+</apex:pageBlock>
+</apex:page>
