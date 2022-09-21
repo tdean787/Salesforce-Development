@@ -1,18 +1,16 @@
 public class fieldTestController {
-        public List<SelectOption> listOfObjects{get;set;}
+    public List<SelectOption> listOfObjects{get;set;}
     public List<SelectOption> listOfFields{get;set;}
-        public String selectedObject{get;set;}
+    public String selectedObject{get;set;}
     public String selectedField{get;set;}
-    public List<FieldPermissions> fp{get;set;} 
-        
+    public List<FieldPermissions> fp{get;set;}
+    
+    public String renderedText{get;set;}
     public Map<String, Schema.SobjectType> gd = schema.getGlobalDescribe();
     public Map<String, Schema.SObjectField> MapOfFields;
     
     public fieldTestController(){
-        //fp = [SELECT Parent.Profile.Name, Parent.Label, Parent.IsOwnedByProfile, SobjectType, Field, PermissionsEdit, PermissionsRead 
-//FROM FieldPermissions
-//WHERE SobjectType = 'Contact' AND Field = 'Contact.Department'];
-        fp = [select Field, ParentId, PermissionsEdit, Parent.Name, Parent.Label, Parent.Profile.Name from FieldPermissions WHERE SobjectType = 'Contact'];
+        // fp = [select Field, ParentId, PermissionsEdit, Parent.Name, Parent.Label, Parent.Profile.Name from FieldPermissions WHERE SobjectType = 'Contact'];
         listOfObjects = new List<SelectOption>();
         
         Integer counter = 1;
@@ -26,8 +24,7 @@ public class fieldTestController {
         listOfObjects.sort();
      }
         
-        
-        public void fetchFields(){
+        public void fetchFields(){            
             listOfFields = new List<SelectOption>();
             MapOfFields = gd.get(selectedObject).getDescribe().fields.getMap();
             
@@ -36,12 +33,23 @@ public class fieldTestController {
                 listOfFields.add(new SelectOption(String.valueOf(dfr.getName()), String.valueof(dfr.getLabel())));
             }
         }
+        
+        public void updatePermissionsDisplay(){
+            system.debug(selectedObject);
+            system.debug(selectedField);
+            String concatSelect = selectedObject +'.'+ selectedField;
+            system.debug(concatSelect);
+            fp = [select Field, ParentId, PermissionsEdit, PermissionsRead, Parent.Name, Parent.Label, Parent.Profile.Name from FieldPermissions WHERE SobjectType = :selectedObject AND Field = :concatSelect];
+            system.debug(fp);
+        }
     
     public void selectedfield() {
         system.debug(selectedField);
-        List<FieldPermissions> fp = [SELECT Parent.Profile.Name, Parent.Label, Parent.IsOwnedByProfile, SobjectType, Field, PermissionsEdit, PermissionsRead 
-FROM FieldPermissions
-WHERE SobjectType = 'Contact' AND Field = 'Contact.Department'];
+        // List<FieldPermission> fp = [select Field, ParentId, PermissionsEdit, Parent.Name, Parent.Label, Parent.Profile.Name from FieldPermissions WHERE SobjectType = :selectedObject AND Field = :concatSelect];
+        // system.debug(fp, concatSelect, selectedObject, selectedField);
+//         List<FieldPermissions> fp = [SELECT Parent.Profile.Name, Parent.Label, Parent.IsOwnedByProfile, SobjectType, Field, PermissionsEdit, PermissionsRead 
+// FROM FieldPermissions
+// WHERE SobjectType = 'Contact' AND Field = 'Contact.Department'];
     }
     
 

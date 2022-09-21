@@ -2,10 +2,17 @@
 
 
     <apex:form >
-            <apex:actionFunction name="CallFieldMethod" action="{!fetchFields}" reRender="fields" />
-        <apex:actionFunction name="CallField" action="{!selectedField}"  />
+        <apex:actionFunction name="CallFieldMethod" action="{!fetchFields}" reRender="fields" />
+        <apex:actionFunction name="CallField" action="{!updatePermissionsDisplay}"  />
         <apex:pageMessages id="msg"></apex:pageMessages>
         
+        <apex:outputPanel>
+            <apex:outputText value="{!selectedObject}">selected object</apex:outputText>
+            <br/>
+            <apex:outputText value="{!selectedField}">selected field</apex:outputText>
+            <br/>
+
+        </apex:outputPanel>
         <apex:outputPanel id="objectlist">
         Select Object:
             <apex:selectList value="{!selectedObject}" size="1" onchange="CallFieldMethod()">
@@ -15,20 +22,22 @@
         <br/>
         
         <apex:outputPanel id="fields">
-        Select Field:
+        Select Field Test Change :
             <apex:selectList value="{!selectedField}" size="1" id="FieldList" rendered="{!selectedObject != null}" onchange="CallField()" >
             <apex:selectOptions value="{!listOfFields}"></apex:selectOptions>
+            <!-- <apex:actionSupport event="onchange" reRender="permissionsDisplay" action="{!updatePermissionsDisplay}"></apex:actionSupport> -->
             </apex:selectList>            
         </apex:outputPanel>
         
-        <apex:outputText value="{!objFieldSelect}"></apex:outputText>
+        <!-- <apex:outputText value="{!objFieldSelect}"></apex:outputText> -->
 
-        <apex:pageBlock title="Field Permissions Content">
-                <apex:pageBlockTable value="{!fp}" var="fieldPerms">
+        <apex:pageBlock title="Field Permissions Content" id="permissionsDisplay">
+        <apex:pageBlockTable value="{!fp}" var="fieldPerms">
             <apex:column value="{!fieldPerms.field}"/>
-<apex:column value="{!fieldPerms.permissionsedit}"/>
-<apex:column value="{!fieldPerms.parent.name}"/>
-      <apex:column value="{!fieldPerms.parent.profile.name}"/>
+            <apex:column value="{!fieldPerms.permissionsedit}"/>
+            <apex:column value="{!fieldPerms.permissionsread}"/>
+            <apex:column value="{!fieldPerms.parent.name}"/>
+            <apex:column value="{!fieldPerms.parent.profile.name}"/>
 
 
         </apex:pageBlockTable>
